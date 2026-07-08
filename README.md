@@ -4,7 +4,14 @@
 
   # 🧩 Text-Click Captcha Solver
 
+  ### 文字点选验证码自动识别 — OpenCV + 视觉AI 精准点击
   ### *Precision Click on Chinese Text-Sequence CAPTCHA — OpenCV + Vision AI*
+
+  <p align="center">
+    <a href="https://github.com/xs0364/text-click-captcha-solver">
+      <img src="https://img.shields.io/github/stars/xs0364/text-click-captcha-solver?style=social" />
+    </a>
+  </p>
 
   <p align="center">
     <img src="https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white" />
@@ -16,17 +23,31 @@
   </p>
 
   <p align="center">
-    <a href="#-overview">🔍 Overview</a> •
-    <a href="#-key-features">✨ Features</a> •
-    <a href="#-how-it-works">⚙️ How It Works</a> •
-    <a href="#-benchmark">📊 Benchmark</a> •
-    <a href="#-quick-start">🚀 Quick Start</a> •
-    <a href="#-architecture">🏗️ Architecture</a>
+    <a href="#-overview">🔍 概述</a> •
+    <a href="#-key-features">✨ 功能</a> •
+    <a href="#-how-it-works">⚙️ 原理</a> •
+    <a href="#-benchmark">📊 性能</a> •
+    <a href="#-quick-start">🚀 开始</a> •
+    <a href="#-architecture">🏗️ 架构</a>
   </p>
 
   <br/>
 
-  > **⭐ If this project saved you time, give it a star! Contributions and issues are welcome.**
+  <table>
+    <tr>
+      <td align="center"><b>🏷️ 关键词 / Keywords</b></td>
+      <td>
+        <code>验证码识别</code> <code>点选验证码</code>
+        <code>文字点选</code> <code>图形验证码</code>
+        <code>captcha破解</code> <code>OCR验证码</code>
+        <code>web自动化</code> <code>视觉AI</code>
+      </td>
+    </tr>
+  </table>
+
+  <br/>
+
+  > **⭐ 如果这个项目帮到了你，欢迎点 Star！你的支持是持续改进的动力。**
 </div>
 
 ---
@@ -272,6 +293,12 @@ We welcome contributions! This project is in active development.
 
 [![GitHub stars](https://img.shields.io/github/stars/xs0364/text-click-captcha-solver?style=social)](https://github.com/xs0364/text-click-captcha-solver)
 [![GitHub issues](https://img.shields.io/github/issues/xs0364/text-click-captcha-solver)](https://github.com/xs0364/text-click-captcha-solver/issues)
+
+---
+
+**📌 搜索关键词：** `验证码识别` `点选验证码` `文字点选验证码` `图形验证码` `captcha破解` `OCR验证码` `视觉AI` `web自动化` `captcha` `opencv` `playwright` `computer vision`
+
+---
 
 *Built with ❤️ for the DevOps community automating the hard stuff.*
 

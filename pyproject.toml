@@ -9,7 +9,11 @@ description = "Automated solver for Chinese text-sequence CAPTCHAs (文字点选
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
-keywords = ["captcha", "opencv", "vision-ai", "playwright", "web-automation", "chinese-captcha"]
+keywords = [
+    "captcha", "opencv", "vision-ai", "playwright", "web-automation", "chinese-captcha",
+    "验证码识别", "点选验证码", "文字点选验证码", "captcha破解", "图形验证码",
+    "OCR验证码", "视觉AI", "web自动化",
+]
 
 authors = [
     {name = "xs0364"},
