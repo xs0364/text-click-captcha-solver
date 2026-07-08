@@ -9,3 +9,4 @@ build/
 *.png
 !examples/*.png
 .cache/
+*.bat
