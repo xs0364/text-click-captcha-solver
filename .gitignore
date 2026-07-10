@@ -10,3 +10,4 @@ build/
 !examples/*.png
 .cache/
 *.bat
+__pycache__/
