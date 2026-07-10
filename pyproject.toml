@@ -4,15 +4,15 @@ build-backend = "setuptools.backends._legacy:_Backend"
 
 [project]
 name = "text-click-captcha-solver"
-version = "0.1.0"
-description = "Automated solver for Chinese text-sequence CAPTCHAs (文字点选验证码) using OpenCV contour detection + Vision AI"
+version = "1.0.0"
+description = "文字顺序点击验证码自动破解 — ddddocr离线识别方案 / Chinese text-sequence CAPTCHA solver using ddddocr"
 readme = "README.md"
 license = {text = "MIT"}
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 keywords = [
-    "captcha", "opencv", "vision-ai", "playwright", "web-automation", "chinese-captcha",
-    "验证码识别", "点选验证码", "文字点选验证码", "captcha破解", "图形验证码",
-    "OCR验证码", "视觉AI", "web自动化",
+    "captcha", "ddddocr", "ocr", "playwright", "web-automation", "chinese-captcha",
+    "验证码识别", "点选验证码", "文字点选验证码", "文字顺序点击验证码",
+    "OCR验证码", "图形验证码", "web自动化",
 ]
 
 authors = [
@@ -21,22 +21,19 @@ authors = [
 
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "License :: OSI Approved :: MIT License",
     "Topic :: Internet :: WWW/HTTP :: Browsers",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: Security :: Cryptography",
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
 ]
 
 dependencies = [
-    "opencv-python>=4.8.0",
-    "numpy>=1.24.0",
-    "Pillow>=10.0.0",
-    "httpx>=0.25.0",
-    "playwright>=1.40.0",
+    "ddddocr>=1.4.0",
+    "Pillow>=9.0.0",
 ]
 
 [project.urls]

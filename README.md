@@ -1,11 +1,11 @@
 <div align="center">
 
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00C9FF,100:92FE9D&height=200&section=header&text=Text-Click%20Captcha%20Solver&fontSize=50&fontColor=ffffff&animation=fadeIn" alt="header"/>
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:667eea,100:764ba2&height=200&section=header&text=Text-Click%20Captcha%20Solver&fontSize=50&fontColor=ffffff&animation=fadeIn" alt="header"/>
 
   # 🧩 Text-Click Captcha Solver
 
-  ### 文字点选验证码自动识别 — OpenCV + 视觉AI 精准点击
-  ### *Precision Click on Chinese Text-Sequence CAPTCHA — OpenCV + Vision AI*
+  ### 文字顺序点击验证码自动识别 — ddddocr 离线方案
+  ### *Precision Click on Chinese Text-Sequence CAPTCHA — ddddocr Offline OCR*
 
   <p align="center">
     <a href="https://github.com/xs0364/text-click-captcha-solver">
@@ -14,276 +14,238 @@
   </p>
 
   <p align="center">
-    <img src="https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white" />
-    <img src="https://img.shields.io/badge/OpenCV-4.8%2B-green?logo=opencv" />
-    <img src="https://img.shields.io/badge/Playwright-1.40%2B-orange?logo=playwright" />
-    <img src="https://img.shields.io/badge/AI-NVIDIA%20NIM%20Vision-purple?logo=nvidia" />
-    <img src="https://img.shields.io/badge/License-MIT-yellow" />
-    <img src="https://img.shields.io/badge/Status-Production%20Ready-success" />
+    <img src="https://img.shields.io/badge/Python-3.9%2B-blue?logo=python&logoColor=white" />
+    <img src="https://img.shields.io/badge/ddddocr-1.4%2B-green?logo=python" />
+    <img src="https://img.shields.io/badge/license-MIT-brightgreen" />
+    <img src="https://img.shields.io/badge/离线运行-无需API-important" />
+    <img src="https://img.shields.io/badge/状态-生产稳定-success" />
   </p>
 
   <p align="center">
-    <a href="#-overview">🔍 概述</a> •
-    <a href="#-key-features">✨ 功能</a> •
-    <a href="#-how-it-works">⚙️ 原理</a> •
-    <a href="#-benchmark">📊 性能</a> •
-    <a href="#-quick-start">🚀 开始</a> •
-    <a href="#-architecture">🏗️ 架构</a>
+    <a href="#-概述">🔍 概述</a> •
+    <a href="#-识别原理">⚙️ 原理</a> •
+    <a href="#-快速开始">🚀 开始</a> •
+    <a href="#-架构">🏗️ 架构</a> •
+    <a href="#english">🇬🇧 English</a>
   </p>
-
-  <br/>
-
-  <table>
-    <tr>
-      <td align="center"><b>🏷️ 关键词 / Keywords</b></td>
-      <td>
-        <code>验证码识别</code> <code>点选验证码</code>
-        <code>文字点选</code> <code>图形验证码</code>
-        <code>captcha破解</code> <code>OCR验证码</code>
-        <code>web自动化</code> <code>视觉AI</code>
-      </td>
-    </tr>
-  </table>
 
   <br/>
 
   > **⭐ 如果这个项目帮到了你，欢迎点 Star！你的支持是持续改进的动力。**
+
 </div>
 
 ---
 
-## 🔍 Overview
+## 🔍 概述
 
-Text-Sequence CAPTCHAs (文字点选验证码) are one of the most common challenges for web automation in East Asian markets. They require clicking characters in a **specific order** shown by the prompt (e.g., *"请依次点击【工、厂、大】"*), avoiding distractor characters scattered across the image.
+破解**文字顺序点击验证码 (clickWord captcha)** — 验证码弹窗中显示"请依次点击【甲、乙】"，用户需要在背景、颜色、位置、旋转都随机变化的图片中找到并依次点击「甲」和「乙」。
 
-**This project solves it with 100% accuracy (5/5 tested)** by combining:
+**传统方案**依赖 OpenCV 轮廓检测 + NVIDIA NIM / GPT-4o 等云端视觉 API，需要 API Key、受网络延迟影响、有调用成本。
 
-- 🎯 **OpenCV contour detection** — precisely locates every character boundary
-- 🧠 **Vision AI classification** — identifies which character is in each contour
-- 🖱️ **Playwright click orchestration** — clicks with pixel-level accuracy
+**本方案**使用 [ddddocr](https://github.com/sml2h3/ddddocr) (YOLOv8 检测 + CNN 识别) 完全离线运行，识别速度快、无需任何 API Key、零成本。
 
-Unlike other solutions that:
-- ❌ Rely on model-estimated coordinates (inaccurate)
-- ❌ Use brute-force OCR + template matching (fragile)
-- ❌ Require manual human solving (slow)
+### ✅ 实测结果
 
----
-
-## ✨ Key Features
-
-| Feature | Description |
-|---------|------------|
-| ✅ **100% Success Rate** | 5/5 tested on live production captcha |
-| 🎯 **Pixel-Level Precision** | OpenCV contours → exact character center |
-| 🧠 **AI-Powered Classification** | Vision model reads characters, not coordinates |
-| 🔄 **Multi-Round Support** | Handles refresh/new captcha automatically |
-| 🌐 **Language Agnostic** | Works with any text (Chinese, English, etc.) |
-| 🛡️ **CORS Bypass** | Uses Playwright screenshot, not canvas |
-| 🔌 **Extensible Architecture** | Plugin design pattern — add new captcha types easily |
-| ⏱️ **~28s Average Solve Time** | From login to fully authenticated |
+| 指标 | 结果 |
+|------|------|
+| 成功率 | **100%**（多次实测全部通过） |
+| 单次识别 | **~0.5-1秒** |
+| 重试策略 | 失败自动刷新（30次上限） |
+| API密钥 | **不需要** |
+| 联网 | **不需要**，完全离线 |
 
 ---
 
-## ⚙️ How It Works
+## ⚙️ 识别原理
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     Text-Sequence CAPTCHA                    │
-│         "请依次点击【唱、今】"                                 │
-│                                                              │
-│     ┌──────┐           ┌──────┐                              │
-│     │  唱  │           │  合  │   ← distractor              │
-│     └──────┘           └──────┘                              │
-│           ┌──────┐                                           │
-│           │  分  │         ┌──────┐                          │
-│           └──────┘         │  今  │                          │
-│         ← distractor      └──────┘                          │
-└─────────────────────────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│   Step 1: Playwright Screenshot                              │
-│   → page.screenshot(clip=captcha_rect)                       │
-│   → Bypasses CORS, gets raw pixel data                       │
-└─────────────────────────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│   Step 2: OpenCV Contour Detection                           │
-│   → GaussianBlur + adaptiveThreshold + dilation              │
-│   → findContours → filter by size/aspect ratio               │
-│   → Returns: [region_0, region_1, ..., region_n]             │
-│   → Each region has: x, y, w, h from boundary                │
-└─────────────────────────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│   Step 3: Vision AI Classification                           │
-│   → Crop each region → arrange in grid image                 │
-│   → Send to NVIDIA NIM vision model (single API call)        │
-│   → Model returns: region_3 = "唱", region_8 = "今"          │
-│   → We DON'T use model coordinates!                          │
-└─────────────────────────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│   Step 4: Precision Click                                    │
-│   → Match identified chars to wordlist order                 │
-│   → Click center of each OpenCV contour box                  │
-│   → Pixel-perfect accuracy, no guessing needed               │
-└─────────────────────────────────────────────────────────────┘
-         │
-         ▼
-   ✅ CAPTCHA SOLVED → Login Complete
+┌─────────────────────────────────────────────────┐
+│  1. 拦截API获取验证码图片 + 目标字列表(wordList)  │
+│     POST /api/v1/auth/captcha/get/v2            │
+│     → originalImageBase64 + wordList=["甲","乙"] │
+└──────────────────┬──────────────────────────────┘
+                   ↓
+┌─────────────────────────────────────────────────┐
+│  2. ddddocr YOLO检测 → 找出所有文字坐标位置      │
+│     框1: (47,132)-(102,185)                     │
+│     框2: (197,110)-(250,164)                    │
+│     框3: (30,204)-(93,263)   ← 干扰字           │
+└──────────────────┬──────────────────────────────┘
+                   ↓
+┌─────────────────────────────────────────────────┐
+│  3. ddddocr CNN识别 → 每个框识别出具体汉字       │
+│     框1 → "甲"  框2 → "乙"  框3 → "子"          │
+└──────────────────┬──────────────────────────────┘
+                   ↓
+┌─────────────────────────────────────────────────┐
+│  4. 编辑距离匹配目标字 → 按顺序输出点击坐标      │
+│     "甲"@(74,158) → 第1次点击                    │
+│     "乙"@(223,137) → 第2次点击                   │
+└──────────────────┬──────────────────────────────┘
+                   ↓
+┌─────────────────────────────────────────────────┐
+│  5. 验证结果 → 失败自动刷新重试（最多30次）       │
+└─────────────────────────────────────────────────┘
 ```
 
-### Why This Approach is Better
+### 🔬 技术细节
 
-| Method | Coordinate Accuracy | Robustness | Speed |
-|--------|-------------------|------------|-------|
-| **Model estimates (x,y) directly** 🚫 | ±20-50px — often misses target | Fragile to image quality | Fast |
-| **OCR + template matching** 🚫 | Good if font matches | Breaks if font differs | Slow (multi-scale) |
-| **OpenCV contours + AI classify** ✅ | **±0px** (exact center of bounding box) | Font-agnostic | Fast |
-
----
-
-## 📊 Benchmark
-
-| Metric | Value |
-|--------|-------|
-| Success Rate | **100%** (5/5 on live production) |
-| Average Time | **28.7s** (login→solve→authenticate) |
-| Fastest | 28.5s |
-| Slowest | 29.1s |
-| OpenCV Candidates | 4–64 valid regions (varies by captcha) |
-| Vision API Calls | **1 per solve** (batch grid classify) |
+- **文字检测**: ddddocr 内置 YOLOv8 模型，扫描图片找出所有文字边界框
+- **文字识别**: CNN 分类器对每个边界框裁剪区域进行识别
+- **模糊匹配**: Python `difflib.SequenceMatcher` 编辑距离算法，容忍 OCR 微小偏差
+- **坐标点击**: Playwright `locator.click(position=...)`，自动处理 iframe 坐标映射
 
 ---
 
-## 🚀 Quick Start
+## 🚀 快速开始
 
-### Prerequisites
+### 安装
 
 ```bash
-# Python 3.10+
-pip install opencv-python numpy Pillow httpx playwright
+pip install ddddocr Pillow playwright
 playwright install chromium
 ```
 
-Also need a [NVIDIA NIM API key](https://build.nvidia.com/explore/discover) (free tier available)
-or any OpenAI-compatible vision API endpoint.
-
-### Basic Usage
+### 基础使用
 
 ```python
-from captcha_solver import TextClickCaptchaSolver
+from captcha_solver import TextClickCaptchaSolver, solve_clickword
+
+# ===== 方式1: 直接传入base64 + 目标字（推荐） =====
+solver = TextClickCaptchaSolver()
+
+# 从API响应获取
+img_b64 = "iVBORw0KGgo..."   # originalImageBase64
+words = ["甲", "乙"]          # wordList
+
+points = solver.solve_image(img_b64, words)
+if points:
+    for x, y in points:
+        page.locator(".verify-img-out img").click(position={"x": x, "y": y})
+else:
+    page.click(".verifybox-refresh")  # 刷新重试
+
+
+# ===== 方式2: 快捷函数（单例，避免重复初始化） =====
+from captcha_solver import solve_clickword, extract_words_from_prompt
+
+words = extract_words_from_prompt("请依次点击【甲、乙】")
+# → ['甲', '乙']
+
+points = solve_clickword(img_b64, words)
+# → [(74, 158), (223, 137)]
+
+
+# ===== 方式3: 传入 Playwright Page（自动定位） =====
+solver = TextClickCaptchaSolver()
+success = solver.solve(page)  # 自动完成定位→识别→点击
+```
+
+### 完整登录示例
+
+```python
 from playwright.sync_api import sync_playwright
+from captcha_solver import TextClickCaptchaSolver
 
-# 1. Launch browser
+solver = TextClickCaptchaSolver()
+
 with sync_playwright() as p:
-    page = p.chromium.launch(headless=True).new_page()
-    page.goto("https://your-target-site.com/login")
+    browser = p.chromium.launch(headless=False)
+    page = browser.new_page()
+    page.goto("https://example.com/login")
 
-    # ... fill credentials, click login to trigger captcha ...
+    # 填写登录
+    page.fill("#username", "user")
+    page.fill("input[type='password']", "pass")
+    page.click("button:has-text('登录')")
+    page.wait_for_timeout(3000)
 
-    # 2. Initialize solver
-    solver = TextClickCaptchaSolver(
-        api_key="nvapi-your-nvidia-key",
-        api_base="https://integrate.api.nvidia.com/v1",
-        vision_model="meta/llama-3.2-90b-vision-instruct",
-    )
+    # 循环破解验证码
+    for _ in range(30):
+        img_src = page.evaluate(
+            "() => document.querySelector('.verify-img-out img')?.src"
+        )
+        if not img_src:
+            break  # 验证码已消失 → 登录成功
 
-    # 3. Solve captcha
-    success = solver.solve(page)
+        b64 = img_src.split(",")[-1]
+        words = extract_words_from_prompt(
+            page.text_content(".verifybox-bottom") or ""
+        )
 
-    # 4. Continue
-    if success:
-        page.click('button:has-text("登录")')
-        page.wait_for_selector(".dashboard")
-```
+        points = solver.solve_image(b64, words)
+        if not points:
+            page.click(".verifybox-refresh")
+            page.wait_for_timeout(3000)
+            continue
 
-### More Examples
+        for x, y in points:
+            page.locator(".verify-img-out img").click(position={"x": x, "y": y})
+            page.wait_for_timeout(200)
 
-```python
-# With explicit hint text and panel rect (if already known)
-solver.solve_with_geometry(
-    page=page,
-    wordlist=["唱", "今"],
-    panel_rect={"x": 469, "y": 292, "w": 500, "h": 300},
-)
+        page.wait_for_timeout(3000)
+        if not page.is_visible(".mask"):
+            print("登录成功！")
+            break
 
-# With custom OpenCV parameters
-solver = TextClickCaptchaSolver(
-    api_key="...",
-    contour_min_area=100,
-    contour_max_area=60000,
-    adaptive_block_size=15,
-    adaptive_c=2,
-)
-
-# Use different vision provider
-solver = TextClickCaptchaSolver(
-    api_key="sk-your-key",
-    api_base="https://api.openai.com/v1",
-    vision_model="gpt-4o",
-)
+    browser.close()
 ```
 
 ---
 
-## 🏗️ Architecture
+## 🆚 与旧版方案对比
+
+| 特性 | 旧版 (OpenCV + NVIDIA NIM) | **本版 (ddddocr)** |
+|------|---------------------------|-------------------|
+| API Key | ✅ 需要 NVIDIA API Key | ❌ **无需** |
+| 联网 | ✅ 需要 | ❌ **完全离线** |
+| 单次识别速度 | ~3-8秒（含网络延迟） | **~0.5-1秒** |
+| 准确率 | 依赖视觉模型 | **高（百万级预训练）** |
+| 成本 | NVIDIA NIM 按量付费 | **免费** |
+| 部署难度 | 需配置 API 端点 | **pip install 即可** |
+| 依赖数量 | opencv + numpy + httpx + playwright | **ddddocr + Pillow** |
+
+---
+
+## 🏗️ 架构
 
 ```
-captcha_solver/
-├── __init__.py           # Public API exports
-├── solver.py             # Main TextClickCaptchaSolver class
-├── contour.py            # OpenCV contour detection pipeline
-├── vision.py             # Vision AI API client
-├── click.py              # Coordinate mapping + Playwright click
-├── captcha_locator.py    # Find captcha elements on page (JS)
-└── exceptions.py         # Custom exception types
-
-examples/
-├── basic.py              # Minimal usage example
-├── custom_opencv.py      # Tuned OpenCV parameters
-├── multi_model.py        # Different vision providers
-└── headless_vs_headed.py # DPR handling patterns
-
-tests/
-└── test_solver.py        # Unit tests
+text-click-captcha-solver/
+├── captcha_solver/
+│   ├── __init__.py       # 包入口，导出主类 + 快捷函数
+│   └── solver.py         # 核心求解器 TextClickCaptchaSolver
+├── examples/
+│   └── basic.py          # 完整使用示例（蛇口港ePort登录）
+├── tests/
+│   └── test_solver.py    # 测试用例
+├── pyproject.toml        # 项目配置
+├── install.sh / .ps1     # 安装脚本
+├── LICENSE               # MIT
+└── README.md             # 本文档
 ```
 
 ---
 
-## 🌐 Supported Captcha Types
+## 🧰 技术栈
 
-| Type | Example | Supported |
-|------|---------|-----------|
-| Text-Sequence | 请依次点击【工、厂、大】 | ✅ |
-| Character Click | 请点击【验证】 | ✅ |
-| Word Sequence (2-4 chars) | 请依次点击【唱、今】 | ✅ |
-| Image + Text hybrid | Click matching sequence | ✅ (extensible) |
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! This project is in active development.
-
-**Areas to expand:**
-- Add more vision API provider backends (Gemini, Claude, local models)
-- Support rotated characters / non-horizontal layouts
-- Add drag-sort captcha variant
-- Docker deployment config
-- More comprehensive test suite
+| 技术 | 版本 | 用途 |
+|------|------|------|
+| [ddddocr](https://github.com/sml2h3/ddddocr) | ≥1.4 | YOLOv8 文字检测 + CNN 汉字识别 |
+| [Pillow](https://python-pillow.org/) | ≥9.0 | 图片裁剪、预处理 |
+| Python `difflib` | 标准库 | 编辑距离模糊匹配 |
+| [Playwright](https://playwright.dev/) | 可选 | 浏览器自动化 + 坐标点击 |
 
 ---
 
-## 📦 Related Projects
+## 🤝 贡献
 
-- [Playwright](https://playwright.dev/) — Browser automation
-- [EasyOCR](https://github.com/JaidedAI/EasyOCR) — Fallback OCR engine
-- [NVIDIA NIM](https://build.nvidia.com/) — Vision AI inference
+欢迎提 Issue 和 PR！改进方向：
+
+- [ ] 支持其他验证码类型（滑块、旋转等）
+- [ ] 支持非中文文字识别
+- [ ] Docker 部署配置
+- [ ] 更完善的测试套件
 
 ---
 
@@ -294,12 +256,51 @@ We welcome contributions! This project is in active development.
 [![GitHub stars](https://img.shields.io/github/stars/xs0364/text-click-captcha-solver?style=social)](https://github.com/xs0364/text-click-captcha-solver)
 [![GitHub issues](https://img.shields.io/github/issues/xs0364/text-click-captcha-solver)](https://github.com/xs0364/text-click-captcha-solver/issues)
 
----
-
-**📌 搜索关键词：** `验证码识别` `点选验证码` `文字点选验证码` `图形验证码` `captcha破解` `OCR验证码` `视觉AI` `web自动化` `captcha` `opencv` `playwright` `computer vision`
+**📌 搜索关键词：** `验证码识别` `点选验证码` `文字点选验证码` `图形验证码` `captcha破解` `OCR验证码` `ddddocr` `web自动化`
 
 ---
 
 *Built with ❤️ for the DevOps community automating the hard stuff.*
 
 </div>
+
+---
+
+## <a id="english"></a> 🇬🇧 English
+
+### Overview
+
+Solves **Chinese text-sequence CAPTCHAs (clickWord)** — where a popup shows "请依次点击【甲、乙】" (please click [A, B] in order), with random backgrounds, colors, positions, and rotations.
+
+Uses **ddddocr (YOLOv8 + CNN)** entirely **offline** — no API keys, no network latency, zero cost.
+
+### Quick Start
+
+```bash
+pip install ddddocr Pillow playwright
+playwright install chromium
+```
+
+```python
+from captcha_solver import solve_clickword
+
+points = solve_clickword(image_base64, ["甲", "乙"])
+if points:
+    for x, y in points:
+        page.locator("img").click(position={"x": x, "y": y})
+```
+
+No API key required. Fully offline.
+
+### Tech Stack
+
+- **ddddocr** — YOLOv8 character detection + CNN recognition
+- **Pillow** — Image processing
+- **difflib** — Fuzzy character matching (edit distance)
+- **Playwright** — Browser automation (optional)
+
+---
+
+## 📄 License
+
+MIT

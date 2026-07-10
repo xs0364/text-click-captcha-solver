@@ -1,12 +1,11 @@
 # Text-Click Captcha Solver
-# Version: 0.1.0
+# 文字顺序点击验证码自动破解
+# Version: 1.0.0
 
-from .solver import TextClickCaptchaSolver
-from .exceptions import CaptchaNotFoundError, VisionAPIError, ContourDetectionError
+from .solver import TextClickCaptchaSolver, solve_clickword, extract_words_from_prompt
 
 __all__ = [
     "TextClickCaptchaSolver",
-    "CaptchaNotFoundError",
-    "VisionAPIError",
-    "ContourDetectionError",
+    "solve_clickword",
+    "extract_words_from_prompt",
 ]

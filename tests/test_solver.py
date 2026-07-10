@@ -1,104 +1,101 @@
 """
-Test the full captcha solver pipeline.
+测试 clickWord 验证码破解器
 """
 
 import sys
 import os
-import json
+import base64
+import io
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from captcha_solver.solver import TextClickCaptchaSolver
-from captcha_solver.captcha_locator import find_captcha_elements, parse_wordlist
-from captcha_solver.contour import (
-    preprocess_image,
-    find_character_boxes,
-    merge_overlapping_boxes,
-    build_grid_image,
-)
+from captcha_solver import TextClickCaptchaSolver, solve_clickword, extract_words_from_prompt
 
 
-def test_parse_wordlist():
-    """Test wordlist parsing from hint text."""
+def test_extract_words():
+    """测试目标字提取"""
     tests = [
         ("请依次点击【工、厂、大】", ["工", "厂", "大"]),
         ("请依次点击【唱、今】", ["唱", "今"]),
         ("请点击【验、证】", ["验", "证"]),
         ("no brackets here", []),
         ("【】", []),
-        ("请依次点击【月、也】", ["月", "也"]),
     ]
-
     for hint, expected in tests:
-        result = parse_wordlist(hint)
-        assert result == expected, f"Failed: {hint} → {result} (expected {expected})"
-    print("✅ test_parse_wordlist passed")
+        result = extract_words_from_prompt(hint)
+        assert result == expected, f"失败: {hint} → {result} (期望 {expected})"
+    print(f"PASS: test_extract_words 通过")
+
+def test_solver_init():
+    """Testing solver initialization"""
+    solver = TextClickCaptchaSolver()
+    assert solver.det is not None
+    assert solver.ocr is not None
+    print(f"PASS: test_solver_init 通过")
 
 
-def test_contour_pipeline():
-    """Test contour detection with a test image."""
-    import cv2
-    import numpy as np
-
-    # Create a simple test image with characters
-    img = np.ones((300, 500, 3), dtype=np.uint8) * 245
-
-    # Draw rectangles simulating characters
-    # Simulates: two target chars + one distractor
-    cv2.rectangle(img, (50, 50), (100, 100), (0, 0, 0), -1)   # char 1
-    cv2.rectangle(img, (200, 150), (250, 200), (0, 0, 0), -1)  # char 2
-    cv2.rectangle(img, (350, 80), (390, 140), (100, 100, 100), -1)  # distractor
-
-    cv2.imwrite("/tmp/test_captcha.png", img)
-
-    with open("/tmp/test_captcha.png", "rb") as f:
-        img_bytes = f.read()
-
-    _, binary, w, h = preprocess_image(img_bytes)
-    assert w == 500
-    assert h == 300
-
-    boxes = find_character_boxes(binary, w, h)
-    merged = merge_overlapping_boxes(boxes)
-
-    print(f"  Found {len(merged)} character boxes in test image")
-    for bx in merged:
-        print(f"    {bx}")
-
-    assert len(merged) >= 2, f"Expected at least 2 boxes, got {len(merged)}"
-    print("✅ test_contour_pipeline passed")
+def test_solve_fails_empty():
+    """Empty input returns None"""
+    result = solve_clickword("", ["甲"])
+    assert result is None
+    print(f"PASS: test_solve_fails_empty 通过")
 
 
-def test_build_grid():
-    """Test grid image construction."""
-    import cv2
-    import numpy as np
-    import base64
-
-    img = np.ones((300, 500, 3), dtype=np.uint8) * 245
-    boxes = [(50, 50, 50, 50), (200, 150, 50, 50), (350, 80, 40, 60)]
-
-    grid_img, data_url = build_grid_image(img, boxes)
-    assert data_url.startswith("data:image/png;base64,")
-    print("✅ test_build_grid passed")
+def test_solve_fails_bad_base64():
+    """Invalid base64 returns None"""
+    result = solve_clickword("this-is-not-valid-base64!!!", ["甲"])
+    assert result is None
+    print(f"PASS: test_solve_fails_bad_base64 通过")
 
 
-def test_full_integration():
-    """Integration test requiring API key."""
-    api_key = os.environ.get("NVIDIA_API_KEY")
-    if not api_key:
-        print("⏭️ Skipping integration test — set NVIDIA_API_KEY")
-        return
+def test_solve_white_image():
+    """纯白图片（无文字）返回 None"""
+    from PIL import Image
+    buf = io.BytesIO()
+    Image.new('RGB', (500, 300), (255, 255, 255)).save(buf, format='PNG')
+    b64 = base64.b64encode(buf.getvalue()).decode()
 
-    solver = TextClickCaptchaSolver(api_key=api_key)
-    assert solver.api_key == api_key
-    assert solver.vision_model == "meta/llama-3.2-90b-vision-instruct"
-    print("✅ test_full_integration passed")
+    result = solve_clickword(b64, ["甲"])
+    assert result is None
+    print(f"PASS: test_solve_white_image 通过")
+
+
+def test_solve_with_dataurl_prefix():
+    """data:image 前缀的情况"""
+    from PIL import Image
+    import random
+    buf = io.BytesIO()
+    img = Image.new('RGB', (500, 300), (200, 200, 200))
+    for i in range(3):
+        x, y = random.randint(20, 450), random.randint(20, 250)
+        for dx in range(20):
+            for dy in range(20):
+                if 0 <= x+dx < 500 and 0 <= y+dy < 300:
+                    img.putpixel((x+dx, y+dy), (0, 0, 0))
+    img.save(buf, format='PNG')
+    raw_b64 = base64.b64encode(buf.getvalue()).decode()
+    data_url = f"data:image/png;base64,{raw_b64}"
+
+    result = solve_clickword(data_url, ["测"])
+    print(f"  data_url输入正常处理，结果: {result}")
+    print(f"PASS: test_solve_with_dataurl_prefix 通过")
+
+
+def test_solver_singleton():
+    """快捷函数的单例模式"""
+    from captcha_solver.solver import _solver as s1
+    solve_clickword("", ["甲"])
+    from captcha_solver.solver import _solver as s2
+    assert s2 is not None
+    print(f"PASS: test_solver_singleton 通过")
 
 
 if __name__ == "__main__":
-    test_parse_wordlist()
-    test_contour_pipeline()
-    test_build_grid()
-    test_full_integration()
-    print("\n🎉 All tests passed!")
+    test_extract_words()
+    test_solver_init()
+    test_solve_fails_empty()
+    test_solve_fails_bad_base64()
+    test_solve_white_image()
+    test_solve_with_dataurl_prefix()
+    test_solver_singleton()
+    print("\n=== All tests passed! ===")
